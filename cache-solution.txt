@@ -1,0 +1,18 @@
+1.
+  Problem: Caching code isn't easily reusable any where else in our codebase.
+  Solution: Hook in to Mongoose's query generation and execution process.
+    - Overiding and add some logics to exec() method in mongoose.Query.prototype.exec
+    - Add cache() method to make sure that data is cached at get api.
+
+2.
+  Problem: Cached values never expire.
+  Solution: We need to re-save data to redis when
+    - Add timeout to values assigned to redis.
+    - Create middleware handle post, delete, put, api to reset cached data by hash keys.
+    - Hash key is a string (example: user.id of user create, update, delete post).
+
+3.
+  Problem: Cached key won't work when we introduce other collection or query options.
+  Solution: Figure out a more to generating cache keys
+    - Key is a object { collection, ...query } be converted to string.
+    - ...
